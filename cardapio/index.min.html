@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Cardápio Digital</title>
+    <script src="config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root {
+            --cor-primaria: #3360C3;
+            --cor-primaria-escura: #2551BE;
+            --cor-secundaria: #3360C3;
+            --cor-secundaria-escura: #059669;
+            --cor-terciaria: #f59e0b;
+            --cor-terciaria-escura: #d97706;
+            --cor-whatsapp: #25D366;
+            --cor-whatsapp-escura: #128C7E;
+            --cor-fundo: #ffffff;
+            --cor-fundo-branco: #ffffff;
+            --cor-fundo-modal: rgba(0, 0, 0, 0.9);
+            --cor-texto: #111827;
+            --cor-texto-secundario: #3360C3;
+            --cor-texto-claro: #9ca3af;
+            --cor-texto-branco: #ffffff;
+            --cor-borda: #e5e7eb;
+            --cor-borda-clara: #f3f4f6;
+            --cor-borda-escura: #d1d5db;
+            --cor-sucesso: #10b981;
+            --cor-sucesso-fundo: #e8f5e8;
+            --cor-erro: #ef4444;
+            --cor-erro-fundo: #fef2f2;
+            --cor-aviso: #f59e0b;
+            --transparencia-backdrop: rgba(255, 255, 255, 0.95);
+            --transparencia-sombra: rgba(0, 0, 0, 0.1);
+            --transparencia-sombra-forte: rgba(0, 0, 0, 0.15);
+            --transparencia-hover: rgba(0, 0, 0, 0.05);
+            --transparencia-whatsapp: rgba(37, 211, 102, 0.3);
+            --transparencia-whatsapp-escura: rgba(18, 140, 126, 0.4);
+            --sombra-card: 0 8px 25px var(--transparencia-sombra);
+            --sombra-card-hover: 0 12px 35px var(--transparencia-sombra-forte);
+            --sombra-modal: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --sombra-toast: 0 10px 25px var(--transparencia-sombra-forte);
+            --gradiente-primario: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
+            --gradiente-secundario: linear-gradient(135deg, var(--cor-secundaria), var(--cor-secundaria-escura));
+            --gradiente-terciario: linear-gradient(135deg, var(--cor-terciaria), var(--cor-terciaria-escura));
+        }
+        body{font-family:'Inter',sans-serif}
+        .category-nav{backdrop-filter:blur(10px);background:transparent}
+        .category-item{transition:all .3s ease;white-space:nowrap}
+        .scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}
+        .scrollbar-hide::-webkit-scrollbar{display:none}
+        .category-item.active{background:var(--cor-primaria);color:var(--cor-texto-branco)}
+        .food-card{transition:all .3s ease;cursor:pointer}
+        .food-card:hover{transform:translateY(-2px);box-shadow:var(--sombra-card)}
+        .cart-fab{position:fixed;bottom:30px;right:20px;z-index:1000;transition:all .3s ease;display:flex;align-items:center;justify-content:center;min-width:160px;height:64px;border-radius:32px;box-shadow:0 8px 25px var(--transparencia-whatsapp);backdrop-filter:blur(10px)}
+        .cart-fab:hover{transform:scale(1.05);box-shadow:0 12px 35px var(--transparencia-whatsapp-escura)}
+        .modal-overlay{backdrop-filter:blur(5px)}
+        .quantity-btn{transition:all .2s ease}
+        .quantity-btn:active{transform:scale(.95)}
+        .modal-footer{position:sticky;bottom:0;background:var(--cor-fundo-branco);border-top:1px solid var(--cor-borda);padding:16px 20px;margin:0 -24px -24px -24px;border-radius:0 0 16px 16px;box-shadow:0 -4px 6px -1px var(--transparencia-sombra);z-index:10}
+        .modal-footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center}
+        .modal-footer-grid>div:last-child{padding-left:8px;display:flex;align-items:center;justify-content:center}
+        @media (max-width:640px){#header-slogan{font-size:.65rem!important}}
+        @media (max-width:480px){.modal-footer{padding:12px 16px;margin:0 -20px -20px -20px}.modal-footer-grid{gap:10px}}
+        .slide-up{animation:slideUp .3s ease-out}
+        @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .bounce{animation:bounce .6s ease}
+        @keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}60%{transform:translateY(-5px)}}
+        .shake{animation:shake .6s ease-in-out}
+        @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-8px)}20%,40%,60%,80%{transform:translateX(8px)}}
+        .field-error{border-color:var(--cor-erro)!important;background-color:var(--cor-erro-fundo)!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;border-width:2px!important}
+        .error-message{color:var(--cor-erro);font-size:.875rem;margin-top:.5rem;display:flex;align-items:center;gap:.5rem;font-weight:500;animation:slideDown .3s ease-out}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;max-width:400px;width:90%;padding:16px 20px;border-radius:12px;box-shadow:var(--sombra-toast);backdrop-filter:blur(10px);animation:toastSlideIn .4s ease-out}
+        .toast-error{background:var(--gradiente-primario);color:var(--cor-texto-branco);border:1px solid rgba(255,255,255,.2)}
+        .toast-success{background:var(--gradiente-secundario);color:var(--cor-texto-branco)}
+        .lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--cor-fundo-modal);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;visibility:hidden;transition:all .3s ease}
+        .lightbox.active{opacity:1;visibility:visible}
+        .lightbox-content{position:relative;max-width:90vw;max-height:90vh;transform:scale(.8);transition:transform .3s ease}
+        .lightbox.active .lightbox-content{transform:scale(1)}
+        .lightbox-image{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:var(--sombra-modal)}
+        .lightbox-close{position:absolute;top:-40px;right:0;background:rgba(255,255,255,.9);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;font-weight:700;color:var(--cor-texto);transition:all .2s ease}
+        .lightbox-close:hover{background:var(--cor-fundo-branco);transform:scale(1.1)}
+        .lightbox-title{position:absolute;bottom:-40px;left:0;right:0;text-align:center;color:var(--cor-texto-branco);font-size:16px;font-weight:500}
+        .toast-warning{background:var(--gradiente-terciario);color:var(--cor-texto-branco);border:1px solid rgba(255,255,255,.2)}
+        @keyframes toastSlideIn{from{opacity:0;transform:translate(-50%,-20px)}to{opacity:1;transform:translate(-50%,0)}}
+        .toast-exit{animation:toastSlideOut .3s ease-in forwards}
+        @keyframes toastSlideOut{to{opacity:0;transform:translate(-50%,-20px)}}
+        .lazy-image{opacity:0;transition:opacity .3s ease}
+        .lazy-image.loaded{opacity:1}
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        .checkout-disabled .add-to-cart-btn,.checkout-disabled .quantity-controls,.checkout-disabled .cart-fab,.checkout-disabled .cart-count,.checkout-disabled .add-btn,.checkout-disabled .modal-footer,.checkout-disabled .quantity-btn{display:none!important}
+        .checkout-disabled .food-card{cursor:default}
+        .checkout-disabled .food-card:hover{transform:none}
+    </style>
+</head>
+<body style="background-color: var(--cor-fundo) !important;">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Recarregar página">
+                    <img id="header-logo" src="" alt="Logo" class="object-cover rounded-lg" style="display: none; width: 55px; height: 55px;" onerror="this.style.display='none'">
+                    <div>
+                        <h1 id="header-company-name" class="text-base sm:text-2xl font-bold" style="color: var(--cor-primaria) !important;">Cardápio Digital</h1>
+                        <p id="header-slogan" class="text-xs sm:text-base" style="color: var(--cor-texto) !important;" >Pedidos</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="text-right cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors" onclick="openHoursModal()" id="hours-indicator" style="font-size: 0.85rem;">
+                        <div class="flex items-center space-x-2">
+                            <div id="status-dot" class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div class="font-medium" style="color: var(--cor-secundaria) !important;" id="status-text">Aberto</div>
+                        </div>
+                        <div style="color: var(--cor-texto) !important;" id="hours-text">até 23h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories Navigation -->
+    <nav class="category-nav fixed top-[84px] left-0 right-0 z-30 bg-white" style="border-bottom: 1px solid var(--cor-borda) !important;">
+        <div class="max-w-4xl mx-auto px-4 py-3">
+            <div class="flex space-x-2 overflow-x-auto scrollbar-hide" id="category-nav"></div>
+        </div>
+    </nav>
+
+    <!-- Menu Content -->
+    <main class="max-w-4xl mx-auto px-4 py-6 pb-24 mt-[80px]">
+        <!-- Search -->
+        <div class="mb-6">
+            <div class="relative">
+                <input type="text" id="search" placeholder="Buscar..." class="w-full pl-4 pr-20 py-3 rounded-lg focus:ring-2 focus:border-transparent" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;">
+                <div class="absolute right-2 top-2 flex space-x-2">
+                    <button id="clear-search" onclick="clearSearch()" class="hidden rounded-full w-8 h-8 flex items-center justify-center transition-colors" style="background-color: var(--cor-fundo-secundario) !important; color: var(--cor-texto-secundario) !important;" title="Limpar busca" onmouseover="this.style.backgroundColor='var(--cor-borda)'" onmouseout="this.style.backgroundColor='var(--cor-fundo-secundario)'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                    <button id="search-btn" onclick="performSearch()" class="rounded-full w-8 h-8 flex items-center justify-center transition-colors" style="background-color: var(--cor-primaria) !important; color: white !important;" title="Pesquisar" onmouseover="this.style.backgroundColor='var(--cor-primaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-primaria)'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Sections -->
+        <div id="menu-content"></div>
+    </main>
+
+    <!-- Google Review CTA -->
+    <section id="google-reviews-section" class="py-12 mt-12" style="background: var(--gradiente-terciario) !important; display: none;">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="bg-white rounded-2xl p-8 shadow-xl">
+                <h3 class="text-2xl font-bold mb-3" style="color: var(--cor-texto) !important;">Gostou da experiência?</h3>
+                <p class="mb-6" style="color: var(--cor-texto-secundario) !important;">Sua avaliação nos ajuda a melhorar e alcançar mais pessoas!</p>
+                <a id="google-reviews-link" href="" target="_blank" class="inline-flex items-center space-x-2 px-8 py-4 rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg" style="background-color: var(--cor-terciaria) !important; color: white !important;" onmouseover="this.style.backgroundColor='var(--cor-terciaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-terciaria)'">
+                    <span>⭐</span>
+                    <span>Avaliar no Google</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8" style="background-color: var(--cor-texto) !important; color: white !important;">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-6">
+                <div class="mb-3">
+                    <h3 id="footer-company-name" class="text-2xl font-bold">🍽️ Cardápio Digital</h3>
+                </div>
+                <p id="footer-address" class="mb-4 text-sm" style="color: var(--cor-texto-secundario) !important;">Rua das Flores, 123 • Centro - Campinas/SP</p>
+                
+                <div class="flex flex-wrap justify-center items-center gap-6 text-sm mb-6" style="color: var(--cor-texto-secundario) !important;">
+                    <a id="footer-phone" href="" class="flex items-center space-x-2 hover:scale-105 transition-all duration-200" style="display: none;">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                        <span style="color: var(--cor-texto-secundario) !important;"></span>
+                    </a>
+
+                    <div id="footer-email" class="cursor-pointer" style="display: none;" onclick="window.location.href='mailto:' + this.dataset.email" title="Enviar email">
+                        <svg class="w-5 h-5 text-white hover:scale-110 transition-all duration-200" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <div class="flex items-center space-x-2 cursor-pointer" onclick="openHoursModal()" title="Ver horários de funcionamento">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.9L16.2,16.2Z"/></svg>
+                        <span class="font-medium hover:underline" style="color: var(--cor-texto-secundario) !important; font-size: 0.9em;">Ver Horários</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center space-x-3">
+                    <a id="footer-instagram" href="" target="_blank" style="display: none;" class="text-white hover:scale-110 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.4s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a id="footer-facebook" href="" target="_blank" style="display: none;" class="text-white hover:scale-110 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a id="footer-whatsapp" href="" target="_blank" style="display: none;" class="text-white hover:scale-110 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.488"/></svg>
+                    </a>
+                    <a id="footer-email-link" href="" style="display: none;" class="text-white hover:scale-110 transition-all duration-200">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 text-center">
+                <p class="text-sm" style="color: var(--cor-texto-secundario) !important;">
+                    Desenvolvido por <a href="https://www.gdbtech.com.br" target="_blank" class="font-medium transition-colors" style="color: var(--cor-terciaria) !important;" onmouseover="this.style.color='var(-cor_terciaria_escura)'" onmouseout="this.style.color='var(--cor-texto-secundario'">GDB TECH</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Share FAB -->
+    <button id="share-fab" class="fixed bottom-8 left-4 text-white p-3 rounded-full shadow-lg z-50 transition-all" style="background-color: var(--cor-secundaria) !important;" onclick="shareGeneral()" title="Compartilhar cardápio" onmouseover="this.style.backgroundColor='var(--cor-primaria)'" onmouseout="this.style.backgroundColor='var(--cor-secundaria)'">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path></svg>
+    </button>
+
+    <!-- Cart FAB -->
+    <button id="cart-fab" class="cart-fab text-white shadow-lg hidden" style="background-color: var(--cor-whatsapp) !important;" onclick="openCart()" onmouseover="this.style.backgroundColor='var(--cor-whatsapp-escura)'" onmouseout="this.style.backgroundColor='var(--cor-whatsapp)'">
+        <div class="flex items-center space-x-4 px-5">
+            <div class="relative">
+                <svg class="w-9 h-9 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-top: 6px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L6 5H3m4 8a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                <div id="cart-count" class="absolute -top-2 -right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold border-2" style="color: green !important; border-color: green !important;">0</div>
+            </div>
+            <div class="text-left">
+                <div class="text-xs opacity-90 font-medium">Ver carrinho</div>
+                <div class="font-bold text-base" id="cart-total">R$ 0,00</div>
+            </div>
+        </div>
+    </button>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden z-50" onclick="closeModal(event)">
+        <div class="flex items-start justify-center min-h-screen p-4 pt-8">
+            <div class="relative bg-white rounded-2xl w-full max-w-md slide-up max-h-[85vh] overflow-visible" onclick="event.stopPropagation()">
+                <button onclick="closeModal()" class="absolute -top-3 -right-3 bg-white shadow-lg rounded-full p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 z-20 w-10 h-10 flex items-center justify-center font-bold text-xl">✕</button>
+                <div class="overflow-y-auto overflow-x-hidden max-h-[85vh] rounded-2xl">
+                     <div id="modal-content"></div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden z-50" onclick="closeCart(event)">
+        <div class="flex items-start justify-center min-h-screen p-4 pt-8">
+            <div class="bg-white rounded-2xl w-full max-w-md slide-up" onclick="event.stopPropagation()">
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">Seu Carrinho</h3>
+                        <button onclick="closeCart()" class="text-gray-400 hover:text-gray-600">✕</button>
+                    </div>
+                    <div id="cart-items" class="space-y-4 mb-6 max-h-60 overflow-y-auto" style="overflow-x: visible;"></div>
+                    <div class="border-t pt-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-lg font-bold">Total:</span>
+                            <span class="text-xl font-bold" style="color: var(--cor-primaria) !important;" id="cart-modal-total">R$ 0,00</span>
+                        </div>
+                        <button onclick="proceedToCheckout()" class="w-full text-white py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-primaria) !important;" onmouseover="this.style.backgroundColor='var(--cor-primaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-primaria)'">
+                            Finalizar Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="image-lightbox" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50" onclick="closeLightbox(event)">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="relative max-w-4xl max-h-[90vh] w-full">
+                <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white text-2xl font-bold z-10 transition-colors" onmouseover="this.style.color='var(--cor-texto-secundario)'" onmouseout="this.style.color='white'">✕</button>
+                <img id="lightbox-image" src="" alt="" class="w-full h-full object-contain rounded-lg">
+                <div id="lightbox-title" class="absolute bottom-0 left-0 right-0 text-white p-4 rounded-b-lg" style="background-color: rgba(0,0,0,0.7) !important;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Notes Modal -->
+    <div id="edit-notes-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden z-50" onclick="closeEditNotes(event)">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl w-full max-w-md slide-up" onclick="event.stopPropagation()">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">Editar Observações</h3>
+                        <button onclick="closeEditNotes()" class="text-gray-400 hover:text-gray-600">✕</button>
+                    </div>
+                    <div id="edit-item-info" class="mb-4 p-3 rounded-lg" style="background-color: var(--cor-fundo-secundario) !important;"></div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">Observações</label>
+                        <textarea id="edit-item-notes" class="w-full px-3 py-2 rounded-lg focus:ring-2 focus:border-transparent" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-secundaria) !important;" rows="3" placeholder="Digite suas observações para este item..."></textarea>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button onclick="closeEditNotes()" class="flex-1 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-fundo-secundario) !important; color: var(--cor-texto) !important;" onmouseover="this.style.backgroundColor='var(--cor-borda)'" onmouseout="this.style.backgroundColor='var(--cor-fundo-secundario)'">
+                            Cancelar
+                        </button>
+                        <button onclick="saveItemNotes()" class="flex-1 text-white py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-secundaria) !important;" onmouseover="this.style.backgroundColor='var(--cor-secundaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-secundaria)'">
+                            Salvar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden z-50" onclick="closeCheckout(event)">
+        <div class="flex items-start justify-center min-h-screen p-4 pt-8">
+            <div class="rounded-2xl w-full max-w-lg slide-up max-h-[85vh] overflow-y-auto" style="background-color: var(--cor-fundo) !important;" onclick="event.stopPropagation()">
+                <!-- Step 2: Delivery Type -->
+                <div id="checkout-step-2" class="checkout-step p-6 hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background-color: var(--cor-primaria) !important; color: white !important;">1</div>
+                            <h3 class="text-xl font-bold">Tipo de Recebimento</h3>
+                        </div>
+                        <button onclick="closeCheckout()" style="color: var(--cor-texto-secundario) !important;" onmouseover="this.style.color='var(--cor-texto)'" onmouseout="this.style.color='var(--cor-texto-secundario)'">✕</button>
+                    </div>
+                    
+                    <div id="delivery-options" class="space-y-3 mb-6">
+                        <label class="flex items-center p-4 rounded-lg cursor-pointer" style="border: 1px solid var(--cor-borda) !important; background-color: white !important;" onmouseover="this.style.backgroundColor='#f9f9f9'" onmouseout="this.style.backgroundColor='white'">
+                            <input type="radio" name="delivery-type" value="local" class="mr-3" onchange="handleDeliveryTypeChange()">
+                            <div>
+                                <div class="font-medium">🍽️ Consumir no Local</div>
+                                <div class="text-sm" style="color: var(--cor-texto) !important;">Comer no restaurante</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center p-4 rounded-lg cursor-pointer" style="border: 1px solid var(--cor-borda) !important; background-color: white !important;" onmouseover="this.style.backgroundColor='#f9f9f9'" onmouseout="this.style.backgroundColor='white'">
+                            <input type="radio" name="delivery-type" value="pickup" class="mr-3" onchange="handleDeliveryTypeChange()">
+                            <div>
+                                <div class="font-medium">🥡 Retirar no Balcão</div>
+                                <div class="text-sm" style="color: var(--cor-texto) !important;">Buscar no restaurante</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center p-4 rounded-lg cursor-pointer" style="border: 1px solid var(--cor-borda) !important; background-color: white !important;" onmouseover="this.style.backgroundColor='#f9f9f9'" onmouseout="this.style.backgroundColor='white'">
+                            <input type="radio" name="delivery-type" value="delivery" class="mr-3" onchange="handleDeliveryTypeChange()">
+                            <div>
+                                <div class="font-medium">🛵 Delivery</div>
+                                <div class="text-sm" style="color: var(--cor-texto) !important;">Entrega em casa</div>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center p-4 rounded-lg cursor-pointer" style="border: 1px solid var(--cor-borda) !important; background-color: white !important;" onmouseover="this.style.backgroundColor='#f9f9f9'" onmouseout="this.style.backgroundColor='white'">
+                            <input type="radio" name="delivery-type" value="default" class="mr-3" onchange="handleDeliveryTypeChange()">
+                            <div>
+                                <div class="font-medium">📋 Padrão</div>
+                                <div class="text-sm" style="color: var(--cor-texto) !important;">Sem especificação</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div id="delivery-fields" class="mb-6"></div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="closeCheckout()" class="flex-1 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-fundo-secundario) !important; color: var(--cor-texto) !important;" onmouseover="this.style.backgroundColor='var(--cor-borda)'" onmouseout="this.style.backgroundColor='var(--cor-fundo-secundario)'">
+                            Cancelar
+                        </button>
+                        <button onclick="nextStep(3)" id="step2-continue" class="flex-1 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-primaria) !important; color: white !important;" onmouseover="this.style.backgroundColor='var(--cor-primaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-primaria)'">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customer Info -->
+                <div id="checkout-step-3" class="checkout-step p-6 hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" style="background-color: var(--cor-primaria) !important; color: white !important;">2</div>
+                            <h3 class="text-xl font-bold">Finalizar Pedido</h3>
+                        </div>
+                        <button onclick="closeCheckout()" style="color: var(--cor-texto-secundario) !important;" onmouseover="this.style.color='var(--cor-texto)'" onmouseout="this.style.color='var(--cor-texto-secundario)'">✕</button>
+                    </div>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">Nome *</label>
+                            <input type="text" id="customer-name" class="w-full px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;" placeholder="Seu nome completo" oninput="clearFieldError('customer-name')" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'">
+                        </div>
+                        
+                        <div id="whatsapp-field" class="hidden">
+                            <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">WhatsApp *</label>
+                            <div class="flex space-x-2">
+                                <select id="country-code" class="px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important; min-width: 120px;" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'" onchange="updatePhonePlaceholder()">
+                                    <option value="55" data-flag="🇧🇷" data-format="(99) 9 9999-9999">🇧🇷 +55</option>
+                                    <option value="351" data-flag="🇵🇹" data-format="999 999 999">🇵🇹 +351</option>
+                                    <option value="244" data-flag="🇦🇴" data-format="999 999 999">🇦🇴 +244</option>
+                                    <option value="258" data-flag="🇲🇿" data-format="99 999 9999">🇲🇿 +258</option>
+                                    <option value="238" data-flag="🇨🇻" data-format="999 99 99">🇨🇻 +238</option>
+                                    <option value="245" data-flag="🇬🇼" data-format="999 9999">🇬🇼 +245</option>
+                                    <option value="239" data-flag="🇸🇹" data-format="99 99999">🇸🇹 +239</option>
+                                    <option value="670" data-flag="🇹🇱" data-format="999 9999">🇹🇱 +670</option>
+                                    <option value="853" data-flag="🇲🇴" data-format="9999 9999">🇲🇴 +853</option>
+                                    <option value="1" data-flag="🇺🇸" data-format="(999) 999-9999">🇺🇸 +1</option>
+                                </select>
+                                <input type="tel" id="customer-phone" class="flex-1 px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;" placeholder="(99) 9 9999-9999" oninput="formatPhoneNumber(this); clearFieldError('customer-phone')" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'">
+                            </div>
+                        </div>
+                        
+                        <div id="payment-method-field">
+                            <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">Forma de Pagamento *</label>
+                            <select id="payment-method" class="w-full px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;" oninput="clearFieldError('payment-method')" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'" onchange="handlePaymentMethodChange()">
+                                <option value="" disabled selected>Selecione uma forma de pagamento</option>
+                                <option value="pix">PIX</option>
+                                <option value="credit">Cartão de Crédito</option>
+                                <option value="debit">Cartão de Débito</option>
+                                <option value="cash">Dinheiro</option>
+                                <option value="transfer">Transferência Bancária</option>
+                                <option value="other">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div id="change-field" class="hidden">
+                            <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">Troco para quanto?</label>
+                            <input type="text" id="change-amount" class="w-full px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;" placeholder="R$ 0,00" oninput="formatCurrencyInput(this)" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2" style="color: var(--cor-texto) !important;">Observações do Pedido</label>
+                            <textarea id="order-notes" class="w-full px-3 py-2 rounded-lg" style="border: 1px solid var(--cor-borda) !important; --tw-ring-color: var(--cor-primaria) !important;" rows="2" placeholder="Alguma observação para o pedido completo?" onfocus="this.style.borderColor='var(--cor-primaria)'; this.style.outline='2px solid var(--cor-primaria)'; this.style.outlineOffset='2px'" onblur="this.style.borderColor='var(--cor-borda)'; this.style.outline='none'"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-4 mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium" style="color: var(--cor-texto) !important;">Subtotal:</span>
+                            <span class="text-sm font-medium" id="checkout-subtotal">R$ 0,00</span>
+                        </div>
+                        <div id="delivery-fee-row" class="flex justify-between items-center mb-2 hidden">
+                            <span class="text-sm font-medium" style="color: var(--cor-texto) !important;">Taxa de entrega:</span>
+                            <span class="text-sm font-medium" id="checkout-delivery-fee">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-base font-bold" style="color: var(--cor-texto) !important;">Total:</span>
+                            <span class="text-lg font-bold" style="color: var(--cor-primaria) !important;" id="checkout-total">R$ 0,00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="prevStep()" class="flex-1 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-fundo-secundario) !important; color: var(--cor-texto) !important;" onmouseover="this.style.backgroundColor='var(--cor-borda)'" onmouseout="this.style.backgroundColor='var(--cor-fundo-secundario)'">
+                            Voltar
+                        </button>
+                        <button onclick="submitOrder()" id="submit-order-btn" class="flex-1 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-primaria) !important; color: white !important;" onmouseover="this.style.backgroundColor='var(--cor-primaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-primaria)'">
+                            Enviar Pedido
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Order Confirmation -->
+                <div id="checkout-step-4" class="checkout-step p-6 hidden">
+                    <div class="text-center py-6">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Pedido Enviado!</h3>
+                        <p class="text-gray-600 mb-6">Seu pedido foi enviado com sucesso.</p>
+                        <div id="whatsapp-confirmation" class="mb-6 p-4 bg-green-50 rounded-lg">
+                            <p class="text-green-800 mb-2">Seu pedido foi enviado para o WhatsApp do estabelecimento.</p>
+                            <p class="text-green-800 text-sm">Acompanhe o status do seu pedido pelo WhatsApp.</p>
+                        </div>
+                        <button onclick="closeCheckout()" class="px-8 py-3 rounded-lg font-medium transition-colors" style="background-color: var(--cor-primaria) !important; color: white !important;" onmouseover="this.style.backgroundColor='var(--cor-primaria-escura)'" onmouseout="this.style.backgroundColor='var(--cor-primaria)'">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hours Modal -->
+    <div id="hours-modal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden z-50" onclick="closeHoursModal(event)">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-2xl w-full max-w-md slide-up" onclick="event.stopPropagation()">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">Horário de Funcionamento</h3>
+                        <button onclick="closeHoursModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+                    </div>
+                    <div id="hours-content" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Global variables
+        let menuItems = [];
+        let categories = [];
+        let operatingHours = [];
+        let appConfig = {};
+        let cart = [];
+        let currentProduct = null;
+        let selectedVariations = {};
+        let editingCartItemIndex = -1;
+        let deliveryFee = 0;
+        let currentDeliveryType = '';
+        let isCheckoutDisabled = false;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Load configuration data
+                const configData = await fetchCSV(CONFIG_CSV_URL);
+                appConfig = processConfigData(configData);
+                
+                // Apply configuration
+                applyConfiguration();
+                
+                // Load categories
+                categories = await fetchCSV(CATEGORIES_CSV_URL);
+                renderCategories();
+                
+                // Load menu items
+                menuItems = await fetchCSV(MENU_CSV_URL);
+                renderMenu();
+                
+                // Load operating hours
+                operatingHours = await fetchCSV(HOURS_CSV_URL);
+                updateOperatingHoursDisplay();
+                
+                // Initialize search functionality
+                initializeSearch();
+                
+                // Check for URL parameters
+                checkURLParameters();
+                
+                // Initialize cart from localStorage
+                loadCartFromStorage();
+                
+                // Check if checkout is disabled
+                checkCheckoutMode();
+                
+                // Initialize sharing functionality
+                initializeSharing();
+                
+            } catch (error) {
+                console.error('Error initializing application:', error);
+                showToast('Erro ao carregar dados. Por favor, recarregue a página.', 'error');
+            }
+        });
+        
+        // Process configuration data
+        function processConfigData(configData) {
+            const config = {};
+            configData.forEach(item => {
+                if (item.key && item.value) {
+                    config[item.key] = item.value;
+                }
+            });
+            return config;
+        }
+        
+        // Apply configuration to the page
+        function applyConfiguration() {
+            // Set page title
+            document.title = appConfig.title || 'Cardápio Digital';
+            
+            // Set SEO meta tags
+            if (appConfig.description) {
+                const metaDesc = document.createElement('meta');
+                metaDesc.name = 'description';
+                metaDesc.content = appConfig.description;
+                document.head.appendChild(metaDesc);
+            }
+            
+            // Set favicon
+            if (appConfig.favicon) {
+                const favicon = document.createElement('link');
+                favicon.rel = 'icon';
+                favicon.href = appConfig.favicon;
+                document.head.appendChild(favicon);
+            }
+            
+            // Set colors
+            if (appConfig.primary_color) {
+                document.documentElement.style.setProperty('--cor-primaria', appConfig.primary_color);
+                document.documentElement.style.setProperty('--cor-primaria-escura', adjustColor(appConfig.primary_color, -15));
+            }
+            
+            if (appConfig.secondary_color) {
+                document.documentElement.style.setProperty('--cor-secundaria', appConfig.secondary_color);
+                document.documentElement.style.setProperty('--cor-secundaria-escura', adjustColor(appConfig.secondary_color, -15));
+            }
+            
+            if (appConfig.tertiary_color) {
+                document.documentElement.style.setProperty('--cor-terciaria', appConfig.tertiary_color);
+                document.documentElement.style.setProperty('--cor-terciaria-escura', adjustColor(appConfig.tertiary_color, -15));
+            }
+            
+            // Update header elements
+            updateHeaderElements();
+            
+            // Update footer elements
+            updateFooterElements();
+            
+            // Set Google Reviews link
+            if (appConfig.google_reviews_link) {
+                document.getElementById('google-reviews-link').href = appConfig.google_reviews_link;
+                document.getElementById('google-reviews-section').style.display = 'block';
+            }
+            
+            // Set checkout mode
+            if (appConfig.checkout_mode === 'disabled') {
+                document.body.classList.add('checkout-disabled');
+                isCheckoutDisabled = true;
+                console.log('Checkout mode: disabled');
+            }
+        }
+        
+        // Update header elements based on configuration
+        function updateHeaderElements() {
+            // Set company name
+            if (appConfig.company_name) {
+                document.getElementById('header-company-name').textContent = appConfig.company_name;
+                document.getElementById('footer-company-name').textContent = appConfig.company_name;
+            }
+            
+            // Set slogan
+            if (appConfig.slogan) {
+                document.getElementById('header-slogan').textContent = appConfig.slogan;
+            }
+            
+            // Set logo
+            if (appConfig.logo) {
+                const logoImg = document.getElementById('header-logo');
+                logoImg.src = appConfig.logo;
+                logoImg.style.display = 'block';
+            }
+            
+            // Set address
+            if (appConfig.address) {
+                document.getElementById('footer-address').textContent = appConfig.address;
+            }
+        }
+        
+        // Update footer elements based on configuration
+        function updateFooterElements() {
+            // Set phone
+            if (appConfig.phone) {
+                const phoneElement = document.getElementById('footer-phone');
+                phoneElement.href = `tel:${appConfig.phone}`;
+                phoneElement.querySelector('span').textContent = appConfig.phone;
+                phoneElement.style.display = 'flex';
+            }
+            
+            // Set email
+            if (appConfig.email) {
+                const emailElement = document.getElementById('footer-email');
+                emailElement.dataset.email = appConfig.email;
+                emailElement.style.display = 'block';
+                
+                const emailLink = document.getElementById('footer-email-link');
+                emailLink.href = `mailto:${appConfig.email}`;
+                emailLink.style.display = 'block';
+            }
+            
+            // Set social media links
+            if (appConfig.instagram) {
+                const instagramLink = document.getElementById('footer-instagram');
+                instagramLink.href = appConfig.instagram;
+                instagramLink.style.display = 'block';
+            }
+            
+            if (appConfig.facebook) {
+                const facebookLink = document.getElementById('footer-facebook');
+                facebookLink.href = appConfig.facebook;
+                facebookLink.style.display = 'block';
+            }
+            
+            if (appConfig.whatsapp) {
+                const whatsappLink = document.getElementById('footer-whatsapp');
+                const formattedNumber = appConfig.whatsapp.replace(/\D/g, '');
+                whatsappLink.href = `https://wa.me/${formattedNumber}`;
+                whatsappLink.style.display = 'block';
+            }
+        }
+        
+        // Fetch CSV data from Google Sheets
+        async function fetchCSV(url) {
+            try {
+                const response = await fetch(url);
+                const csvText = await response.text();
+                return parseCSV(csvText);
+            } catch (error) {
+                console.error('Error fetching CSV:', error);
+                throw error;
+            }
+        }
+        
+        // Parse CSV text to array of objects
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(header => header.trim());
+            
+            return lines.slice(1)
+                .filter(line => line.trim() !== '')
+                .map(line => {
+                    const values = line.split(',').map(value => value.trim());
+                    const obj = {};
+                    
+                    headers.forEach((header, index) => {
+                        obj[header] = values[index] || '';
+                    });
+                    
+                    return obj;
+                });
+        }
+        
+        // Render categories navigation
+        function renderCategories() {
+            const categoryNav = document.getElementById('category-nav');
+            categoryNav.innerHTML = '';
+            
+            // Add "All" category
+            const allCategoryItem = document.createElement('div');
+            allCategoryItem.className = 'category-item active px-4 py-2 rounded-full text-sm font-medium cursor-pointer';
+            allCategoryItem.textContent = 'Todos';
+            allCategoryItem.dataset.category = 'all';
+            allCategoryItem.onclick = () => filterByCategory('all');
+            categoryNav.appendChild(allCategoryItem);
+            
+            // Sort categories by order
+            const sortedCategories = [...categories].sort((a, b) => {
+                return parseInt(a.order || '999') - parseInt(b.order || '999');
+            });
+            
+            // Add each category
+            sortedCategories.forEach(category => {
+                if (category.name && category.name.trim() !== '') {
+                    const categoryItem = document.createElement('div');
+                    categoryItem.className = 'category-item px-4 py-2 rounded-full text-sm font-medium cursor-pointer';
+                    categoryItem.textContent = category.name;
+                    categoryItem.dataset.category = category.id;
+                    categoryItem.onclick = () => filterByCategory(category.id);
+                    categoryNav.appendChild(categoryItem);
+                }
+            });
+        }
+        
+        // Render menu items
+        function renderMenu() {
+            const menuContent = document.getElementById('menu-content');
+            menuContent.innerHTML = '';
+            
+            // Sort categories by order
+            const sortedCategories = [...categories].sort((a, b) => {
+                return parseInt(a.order || '999') - parseInt(b.order || '999');
+            });
+            
+            // Filter active categories
+            const activeCategories = sortedCategories.filter(category => category.active !== 'false');
+            
+            // Create sections for each category
+            activeCategories.forEach(category => {
+                if (category.name && category.name.trim() !== '') {
+                    // Create category section
+                    const categorySection = document.createElement('section');
+                    categorySection.className = 'mb-10';
+                    categorySection.id = `category-${category.id}`;
+                    categorySection.dataset.category = category.id;
+                    
+                    // Create category header
+                    const categoryHeader = document.createElement('div');
+                    categoryHeader.className = 'flex items-center space-x-3 mb-6';
+                    
+                    const categoryTitle = document.createElement('h2');
+                    categoryTitle.className = 'text-2xl font-bold';
+                    categoryTitle.style.color = 'var(--cor-texto) !important';
+                    categoryTitle.textContent = category.name;
+                    
+                    categoryHeader.appendChild(categoryTitle);
+                    categorySection.appendChild(categoryHeader);
+                    
+                    // Create items grid
+                    const itemsGrid = document.createElement('div');
+                    itemsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-4';
+                    
+                    // Filter items for this category
+                    const categoryItems = menuItems.filter(item => {
+                        return item.category_id === category.id && item.active !== 'false';
+                    }).sort((a, b) => {
+                        return parseInt(a.order || '999') - parseInt(b.order || '999');
+                    });
+                    
+                    // Add items to grid
+                    categoryItems.forEach(item => {
+                        const itemCard = createItemCard(item);
+                        itemsGrid.appendChild(itemCard);
+                    });
+                    
+                    categorySection.appendChild(itemsGrid);
+                    menuContent.appendChild(categorySection);
+                }
+            });
+        }
+        
+        // Create item card
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'food-card bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all';
+            card.style.border = '1px solid var(--cor-borda-clara) !important';
+            card.onclick = () => openProductModal(item);
+            
+            const cardContent = document.createElement('div');
+            cardContent.className = 'p-4';
+            
+            // Item header with name and price
+            const itemHeader = document.createElement('div');
+            itemHeader.className = 'flex justify-between items-start mb-2';
+            
+            const itemName = document.createElement('h3');
+            itemName.className = 'font-bold text-base';
+            itemName.style.color = 'var(--cor-texto) !important';
+            itemName.textContent = item.name;
+            
+            const itemPrice = document.createElement('div');
+            itemPrice.className = 'font-bold text-base';
+            itemPrice.style.color = 'var(--cor-primaria) !important';
+            itemPrice.textContent = formatCurrency(item.price);
+            
+            itemHeader.appendChild(itemName);
+            itemHeader.appendChild(itemPrice);
+            cardContent.appendChild(itemHeader);
+            
+            // Item description
+            if (item.description) {
+                const itemDescription = document.createElement('p');
+                itemDescription.className = 'text-sm mb-3 line-clamp-2';
+                itemDescription.style.color = 'var(--cor-texto-secundario) !important';
+                itemDescription.textContent = item.description;
+                cardContent.appendChild(itemDescription);
+            }
+            
+            // Add to cart button for mobile
+            if (!isCheckoutDisabled) {
+                const addButton = document.createElement('button');
+                addButton.className = 'add-btn mt-2 w-full py-2 rounded-lg text-white text-sm font-medium transition-colors';
+                addButton.style.backgroundColor = 'var(--cor-primaria) !important';
+                addButton.textContent = 'Adicionar';
+                addButton.onclick = (e) => {
+                    e.stopPropagation();
+                    openProductModal(item);
+                };
+                addButton.onmouseover = () => addButton.style.backgroundColor = 'var(--cor-primaria-escura)';
+                addButton.onmouseout = () => addButton.style.backgroundColor = 'var(--cor-primaria)';
+                
+                cardContent.appendChild(addButton);
+            }
+            
+            card.appendChild(cardContent);
+            return card;
+        }
+        
+        // Filter menu by category
+        function filterByCategory(categoryId) {
+            // Update active category in navigation
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                if (item.dataset.category === categoryId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Show/hide category sections
+            const categorySections = document.querySelectorAll('[data-category]');
+            categorySections.forEach(section => {
+                if (categoryId === 'all' || section.dataset.category === categoryId) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Scroll to category if not 'all'
+            if (categoryId !== 'all') {
+                const targetSection = document.getElementById(`category-${categoryId}`);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 150,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+        
+        // Initialize search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('search');
+            const clearButton = document.getElementById('clear-search');
+            
+            searchInput.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    clearButton.style.display = 'flex';
+                } else {
+                    clearButton.style.display = 'none';
+                }
+                performSearch();
+            });
+            
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        }
+        
+        // Perform search
+        function performSearch() {
+            const searchTerm = document.getElementById('search').value.trim().toLowerCase();
+            const allCategorySections = document.querySelectorAll('section[data-category]');
+            const allFoodCards = document.querySelectorAll('.food-card');
+            
+            if (searchTerm === '') {
+                // Reset to normal view
+                allCategorySections.forEach(section => {
+                    section.style.display = 'block';
+                });
+                allFoodCards.forEach(card => {
+                    card.style.display = 'block';
+                });
+                
+                // Reset category filter
+                const activeCategory = document.querySelector('.category-item.active');
+                if (activeCategory) {
+                    filterByCategory(activeCategory.dataset.category);
+                }
+                return;
+            }
+            
+            // Show all categories for search
+            allCategorySections.forEach(section => {
+                section.style.display = 'block';
+            });
+            
+            // Filter food cards
+            let hasResults = false;
+            allFoodCards.forEach(card => {
+                const itemName = card.querySelector('h3').textContent.toLowerCase();
+                const itemDescription = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+                
+                if (itemName.includes(searchTerm) || itemDescription.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                    
+                    // Make sure parent category is visible
+                    const parentSection = card.closest('section');
+                    if (parentSection) {
+                        parentSection.style.display = 'block';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Hide empty categories
+            allCategorySections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.food-card[style="display: block;"]');
+                if (visibleCards.length === 0) {
+                    section.style.display = 'none';
+                }
+            });
+            
+            // Reset category navigation
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.category-item[data-category="all"]').classList.add('active');
+            
+            // Show no results message
+            if (!hasResults) {
+                if (!document.getElementById('no-results')) {
+                    const noResults = document.createElement('div');
+                    noResults.id = 'no-results';
+                    noResults.className = 'text-center py-10';
+                    noResults.innerHTML = `
+                        <div class="text-5xl mb-4">🔍</div>
+                        <h3 class="text-xl font-bold mb-2">Nenhum resultado encontrado</h3>
+                        <p class="text-gray-500">Tente buscar por outro termo</p>
+                    `;
+                    document.getElementById('menu-content').appendChild(noResults);
+                }
+            } else {
+                const noResults = document.getElementById('no-results');
+                if (noResults) {
+                    noResults.remove();
+                }
+            }
+        }
+        
+        // Clear search
+        function clearSearch() {
+            const searchInput = document.getElementById('search');
+            searchInput.value = '';
+            document.getElementById('clear-search').style.display = 'none';
+            performSearch();
+        }
+        
+        // Open product modal
+        function openProductModal(product) {
+            currentProduct = product;
+            selectedVariations = {};
+            
+            const modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = '';
+            
+            // Product image
+            if (product.image) {
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'relative';
+                
+                const productImage = document.createElement('img');
+                productImage.src = product.image;
+                productImage.alt = product.name;
+                productImage.className = 'w-full h-48 object-cover';
+                productImage.onclick = () => openLightbox(product.image, product.name);
+                
+                imageContainer.appendChild(productImage);
+                modalContent.appendChild(imageContainer);
+            }
+            
+            // Product details
+            const productDetails = document.createElement('div');
+            productDetails.className = 'p-6';
+            
+            // Product name and price
+            const namePrice = document.createElement('div');
+            namePrice.className = 'flex justify-between items-start mb-2';
+            
+            const productName = document.createElement('h3');
+            productName.className = 'text-xl font-bold';
+            productName.style.color = 'var(--cor-texto) !important';
+            productName.textContent = product.name;
+            
+            const productPrice = document.createElement('div');
+            productPrice.className = 'text-xl font-bold';
+            productPrice.style.color = 'var(--cor-primaria) !important';
+            productPrice.id = 'product-price';
+            productPrice.textContent = formatCurrency(product.price);
+            
+            namePrice.appendChild(productName);
+            namePrice.appendChild(productPrice);
+            productDetails.appendChild(namePrice);
+            
+            // Product description
+            if (product.description) {
+                const productDescription = document.createElement('p');
+                productDescription.className = 'text-sm mb-6';
+                productDescription.style.color = 'var(--cor-texto-secundario) !important';
+                productDescription.textContent = product.description;
+                productDetails.appendChild(productDescription);
+            }
+            
+            // Required variations
+            if (product.required_variations) {
+                try {
+                    const requiredVariations = JSON.parse(product.required_variations);
+                    if (requiredVariations && requiredVariations.length > 0) {
+                        const requiredSection = document.createElement('div');
+                        requiredSection.className = 'mb-6';
+                        
+                        const requiredTitle = document.createElement('h4');
+                        requiredTitle.className = 'font-bold mb-3';
+                        requiredTitle.style.color = 'var(--cor-texto) !important';
+                        requiredTitle.textContent = 'Escolha obrigatória';
+                        
+                        requiredSection.appendChild(requiredTitle);
+                        
+                        requiredVariations.forEach(variation => {
+                            const variationItem = createVariationItem(variation, true);
+                            requiredSection.appendChild(variationItem);
+                        });
+                        
+                        productDetails.appendChild(requiredSection);
+                    }
+                } catch (error) {
+                    console.error('Error parsing required variations:', error);
+                }
+            }
+            
+            // Optional variations
+            if (product.optional_variations) {
+                try {
+                    const optionalVariations = JSON.parse(product.optional_variations);
+                    if (optionalVariations && optionalVariations.length > 0) {
+                        const optionalSection = document.createElement('div');
+                        optionalSection.className = 'mb-6';
+                        
+                        const optionalTitle = document.createElement('h4');
+                        optionalTitle.className = 'font-bold mb-3';
+                        optionalTitle.style.color = 'var(--cor-texto) !important';
+                        optionalTitle.textContent = 'Adicionais (opcional)';
+                        
+                        optionalSection.appendChild(optionalTitle);
+                        
+                        optionalVariations.forEach(variation => {
+                            const variationItem = createVariationItem(variation, false);
+                            optionalSection.appendChild(variationItem);
+                        });
+                        
+                        productDetails.appendChild(optionalSection);
+                    }
+                } catch (error) {
+                    console.error('Error parsing optional variations:', error);
+                }
+            }
+            
+            // Notes field
+            const notesField = document.createElement('div');
+            notesField.className = 'mb-6';
+            
+            const notesLabel = document.createElement('label');
+            notesLabel.className = 'block text-sm font-medium mb-2';
+            notesLabel.style.color = 'var(--cor-texto) !important';
+            notesLabel.textContent = 'Observações';
+            
+            const notesInput = document.createElement('textarea');
+            notesInput.id = 'product-notes';
+            notesInput.className = 'w-full px-3 py-2 rounded-lg';
+            notesInput.style.border = '1px solid var(--cor-borda) !important';
+            notesInput.style.setProperty('--tw-ring-color', 'var(--cor-primaria) !important');
+            notesInput.rows = 2;
+            notesInput.placeholder = 'Alguma observação para este item?';
+            
+            notesField.appendChild(notesLabel);
+            notesField.appendChild(notesInput);
+            productDetails.appendChild(notesField);
+            
+            // Quantity controls
+            if (!isCheckoutDisabled) {
+                const quantityControls = document.createElement('div');
+                quantityControls.className = 'quantity-controls flex items-center justify-between mb-6';
+                
+                const quantityLabel = document.createElement('label');
+                quantityLabel.className = 'block text-sm font-medium';
+                quantityLabel.style.color = 'var(--cor-texto) !important';
+                quantityLabel.textContent = 'Quantidade';
+                
+                const quantityButtons = document.createElement('div');
+                quantityButtons.className = 'flex items-center space-x-3';
+                
+                const decreaseBtn = document.createElement('button');
+                decreaseBtn.className = 'quantity-btn w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold';
+                decreaseBtn.style.backgroundColor = 'var(--cor-fundo-secundario) !important';
+                decreaseBtn.style.color = 'var(--cor-texto) !important';
+                decreaseBtn.textContent = '-';
+                decreaseBtn.onclick = () => updateQuantity(-1);
+                
+                const quantityDisplay = document.createElement('span');
+                quantityDisplay.id = 'quantity-display';
+                quantityDisplay.className = 'text-lg font-bold w-6 text-center';
+                quantityDisplay.style.color = 'var(--cor-texto) !important';
+                quantityDisplay.textContent = '1';
+                
+                const increaseBtn = document.createElement('button');
+                increaseBtn.className = 'quantity-btn w-8 h-8 rounded-full flex items-center justify-center text-lg font-bold';
+                increaseBtn.style.backgroundColor = 'var(--cor-fundo-secundario) !important';
+                increaseBtn.style.color = 'var(--cor-texto) !important';
+                increaseBtn.textContent = '+';
+                increaseBtn.onclick = () => updateQuantity(1);
+                
+                quantityButtons.appendChild(decreaseBtn);
+                quantityButtons.appendChild(quantityDisplay);
+                quantityButtons.appendChild(increaseBtn);
+                
+                quantityControls.appendChild(quantityLabel);
+                quantityControls.appendChild(quantityButtons);
+                
+                productDetails.appendChild(quantityControls);
+            }
+            
+            // Modal footer with add to cart button
+            if (!isCheckoutDisabled) {
+                const modalFooter = document.createElement('div');
+                modalFooter.className = 'modal-footer';
+                
+                const footerGrid = document.createElement('div');
+                footerGrid.className = 'modal-footer-grid';
+                
+                const subtotalDiv = document.createElement('div');
+                subtotalDiv.className = 'text-left';
+                
+                const subtotalLabel = document.createElement('div');
+                subtotalLabel.className = 'text-xs opacity-80';
+                subtotalLabel.style.color = 'var(--cor-texto) !important';
+                subtotalLabel.textContent = 'Subtotal';
+                
+                const subtotalValue = document.createElement('div');
+                subtotalValue.id = 'product-subtotal';
+                subtotalValue.className = 'text-lg font-bold';
+                subtotalValue.style.color = 'var(--cor-primaria) !important';
+                subtotalValue.textContent = formatCurrency(product.price);
+                
+                subtotalDiv.appendChild(subtotalLabel);
+                subtotalDiv.appendChild(subtotalValue);
+                
+                const addToCartBtn = document.createElement('button');
+                addToCartBtn.id = 'add-to-cart-btn';
+                addToCartBtn.className = 'add-to-cart-btn w-full py-3 px-4 rounded-lg text-white font-medium transition-colors';
+                addToCartBtn.style.backgroundColor = 'var(--cor-primaria) !important';
+                addToCartBtn.textContent = editingCartItemIndex >= 0 ? 'Atualizar Item' : 'Adicionar ao Carrinho';
+                addToCartBtn.onclick = addToCart;
+                addToCartBtn.onmouseover = () => addToCartBtn.style.backgroundColor = 'var(--cor-primaria-escura)';
+                addToCartBtn.onmouseout = () => addToCartBtn.style.backgroundColor = 'var(--cor-primaria)';
+                
+                const btnContainer = document.createElement('div');
+                btnContainer.appendChild(addToCartBtn);
+                
+                footerGrid.appendChild(subtotalDiv);
+                footerGrid.appendChild(btnContainer);
+                
+                modalFooter.appendChild(footerGrid);
+                productDetails.appendChild(modalFooter);
+            }
+            
+            modalContent.appendChild(productDetails);
+            
+            // Show modal
+            document.getElementById('product-modal').classList.remove('hidden');
+            
+            // Update price based on variations
+            updateProductPrice();
+        }
+        
+        // Create variation item
+        function createVariationItem(variation, isRequired) {
+            const variationItem = document.createElement('div');
+            variationItem.className = 'mb-4';
+            
+            const variationHeader = document.createElement('div');
+            variationHeader.className = 'flex justify-between items-center mb-2';
+            
+            const variationName = document.createElement('div');
+            variationName.className = 'text-sm font-medium';
+            variationName.style.color = 'var(--cor-texto) !important';
+            variationName.textContent = variation.name;
+            
+            const variationPrice = document.createElement('div');
+            variationPrice.className = 'text-sm font-medium';
+            variationPrice.style.color = 'var(--cor-primaria) !important';
+            variationPrice.textContent = variation.price ? formatCurrency(variation.price) : '';
+            
+            variationHeader.appendChild(variationName);
+            variationHeader.appendChild(variationPrice);
+            variationItem.appendChild(variationHeader);
+            
+            // Create radio or checkbox based on variation type
+            if (isRequired) {
+                const radioGroup = document.createElement('div');
+                radioGroup.className = 'space-y-2';
+                
+                variation.options.forEach(option => {
+                    const radioItem = document.createElement('div');
+                    radioItem.className = 'flex items-center';
+                    
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.name = `variation-${variation.name}`;
+                    radioInput.id = `option-${variation.name}-${option.name}`;
+                    radioInput.className = 'mr-2';
+                    radioInput.value = option.name;
+                    radioInput.style.accentColor = 'var(--cor-primaria) !important';
+                    radioInput.onchange = () => {
+                        selectedVariations[variation.name] = {
+                            type: 'required',
+                            name: option.name,
+                            price: option.price || 0
+                        };
+                        updateProductPrice();
+                    };
+                    
+                    const radioLabel = document.createElement('label');
+                    radioLabel.htmlFor = `option-${variation.name}-${option.name}`;
+                    radioLabel.className = 'text-sm flex justify-between w-full';
+                    radioLabel.style.color = 'var(--cor-texto) !important';
+                    
+                    const optionName = document.createElement('span');
+                    optionName.textContent = option.name;
+                    
+                    const optionPrice = document.createElement('span');
+                    optionPrice.className = 'ml-2';
+                    optionPrice.style.color = 'var(--cor-primaria) !important';
+                    optionPrice.textContent = option.price ? formatCurrency(option.price) : '';
+                    
+                    radioLabel.appendChild(optionName);
+                    if (option.price) {
+                        radioLabel.appendChild(optionPrice);
+                    }
+                    
+                    radioItem.appendChild(radioInput);
+                    radioItem.appendChild(radioLabel);
+                    radioGroup.appendChild(radioItem);
+                });
+                
+                variationItem.appendChild(radioGroup);
+            } else {
+                const checkboxGroup = document.createElement('div');
+                checkboxGroup.className = 'space-y-2';
+                
+                variation.options.forEach(option => {
+                    const checkboxItem = document.createElement('div');
+                    checkboxItem.className = 'flex items-center';
+                    
+                    const checkboxInput = document.createElement('input');
+                    checkboxInput.type = 'checkbox';
+                    checkboxInput.id = `option-${variation.name}-${option.name}`;
+                    checkboxInput.className = 'mr-2';
+                    checkboxInput.value = option.name;
+                    checkboxInput.style.accentColor = 'var(--cor-primaria) !important';
+                    checkboxInput.onchange = (e) => {
+                        const optionKey = `${variation.name}-${option.name}`;
+                        if (e.target.checked) {
+                            if (!selectedVariations[variation.name]) {
+                                selectedVariations[variation.name] = {
+                                    type: 'optional',
+                                    options: {}
+                                };
+                            }
+                            selectedVariations[variation.name].options[option.name] = {
+                                name: option.name,
+                                price: option.price || 0
+                            };
+                        } else {
+                            if (selectedVariations[variation.name] && 
+                                selectedVariations[variation.name].options && 
+                                selectedVariations[variation.name].options[option.name]) {
+                                delete selectedVariations[variation.name].options[option.name];
+                                
+                                // Clean up if no options left
+                                if (Object.keys(selectedVariations[variation.name].options).length === 0) {
+                                    delete selectedVariations[variation.name];
+                                }
+                            }
+                        }
+                        updateProductPrice();
+                    };
+                    
+                    const checkboxLabel = document.createElement('label');
+                    checkboxLabel.htmlFor = `option-${variation.name}-${option.name}`;
+                    checkboxLabel.className = 'text-sm flex justify-between w-full';
+                    checkboxLabel.style.color = 'var(--cor-texto) !important';
+                    
+                    const optionName = document.createElement('span');
+                    optionName.textContent = option.name;
+                    
+                    const optionPrice = document.createElement('span');
+                    optionPrice.className = 'ml-2';
+                    optionPrice.style.color = 'var(--cor-primaria) !important';
+                    optionPrice.textContent = option.price ? formatCurrency(option.price) : '';
+                    
+                    checkboxLabel.appendChild(optionName);
+                    if (option.price) {
+                        checkboxLabel.appendChild(optionPrice);
+                    }
+                    
+                    checkboxItem.appendChild(checkboxInput);
+                    checkboxItem.appendChild(checkboxLabel);
+                    checkboxGroup.appendChild(checkboxItem);
+                });
+                
+                variationItem.appendChild(checkboxGroup);
+            }
+            
+            return variationItem;
+        }
+        
+        // Update product price based on selected variations
+        function updateProductPrice() {
+            if (!currentProduct) return;
+            
+            let basePrice = parseFloat(currentProduct.price) || 0;
+            let totalVariationPrice = 0;
+            
+            // Calculate price from required variations
+            for (const variationName in selectedVariations) {
+                const variation = selectedVariations[variationName];
+                if (variation.type === 'required') {
+                    totalVariationPrice += parseFloat(variation.price) || 0;
+                } else if (variation.type === 'optional') {
+                    // Calculate price from optional variations
+                    for (const optionName in variation.options) {
+                        const option = variation.options[optionName];
+                        totalVariationPrice += parseFloat(option.price) || 0;
+                    }
+                }
+            }
+            
+            // Get quantity
+            const quantity = parseInt(document.getElementById('quantity-display')?.textContent || '1');
+            
+            // Calculate total price
+            const totalPrice = (basePrice + totalVariationPrice) * quantity;
+            
+            // Update price display
+            document.getElementById('product-price').textContent = formatCurrency(basePrice + totalVariationPrice);
+            document.getElementById('product-subtotal').textContent = formatCurrency(totalPrice);
+            
+            // Update add to cart button state
+            updateAddToCartButtonState();
+        }
+        
+        // Update quantity
+        function updateQuantity(change) {
+            const quantityDisplay = document.getElementById('quantity-display');
+            let quantity = parseInt(quantityDisplay.textContent);
+            quantity = Math.max(1, quantity + change);
+            quantityDisplay.textContent = quantity;
+            updateProductPrice();
+        }
+        
+        // Update add to cart button state
+        function updateAddToCartButtonState() {
+            if (!currentProduct) return;
+            
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            if (!addToCartBtn) return;
+            
+            let allRequiredSelected = true;
+            
+            // Check if all required variations are selected
+            if (currentProduct.required_variations) {
+                try {
+                    const requiredVariations = JSON.parse(currentProduct.required_variations);
+                    if (requiredVariations && requiredVariations.length > 0) {
+                        for (const variation of requiredVariations) {
+                            if (!selectedVariations[variation.name]) {
+                                allRequiredSelected = false;
+                                break;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking required variations:', error);
+                }
+            }
+            
+            // Enable/disable button based on selection
+            if (allRequiredSelected) {
+                addToCartBtn.disabled = false;
+                addToCartBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                addToCartBtn.disabled = true;
+                addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        // Add to cart
+        function addToCart() {
+            if (!currentProduct) return;
+            
+            const quantity = parseInt(document.getElementById('quantity-display')?.textContent || '1');
+            const notes = document.getElementById('product-notes')?.value || '';
+            
+            // Create cart item
+            const cartItem = {
+                id: editingCartItemIndex >= 0 ? cart[editingCartItemIndex].id : Date.now(),
+                product: currentProduct,
+                quantity: quantity,
+                notes: notes,
+                variations: JSON.parse(JSON.stringify(selectedVariations)),
+                basePrice: parseFloat(currentProduct.price) || 0,
+                totalPrice: parseFloat(document.getElementById('product-subtotal').textContent.replace(/[^0-9.-]+/g, '')) || 0
+            };
+            
+            // Add to cart or update existing item
+            if (editingCartItemIndex >= 0) {
+                cart[editingCartItemIndex] = cartItem;
+                editingCartItemIndex = -1;
+            } else {
+                cart.push(cartItem);
+            }
+            
+            // Save cart to localStorage
+            saveCart();
+            
+            // Update cart badge
+            updateCartBadge();
+            
+            // Close modal
+            closeProductModal();
+            
+            // Show success toast
+            showToast('success', 'Item adicionado ao carrinho!');
+        }
+        
+        // Save cart to localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+        
+        // Load cart from localStorage
+        function loadCart() {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    cart = JSON.parse(savedCart);
+                    updateCartBadge();
+                } catch (error) {
+                    console.error('Error loading cart:', error);
+                    cart = [];
+                }
+            }
+        }
+        
+        // Update cart badge
+        function updateCartBadge() {
+            const cartBadge = document.getElementById('cart-badge');
+            const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            
+            if (cartCount > 0) {
+                cartBadge.textContent = cartCount;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+            
+            // Update cart button state
+            const cartButton = document.getElementById('cart-button');
+            if (cartCount > 0) {
+                cartButton.classList.remove('disabled');
+            } else {
+                cartButton.classList.add('disabled');
+            }
+        }
+        
+        // Open cart modal
+        function openCartModal() {
+            if (cart.length === 0) {
+                showToast('warning', 'Seu carrinho está vazio!');
+                return;
+            }
+            
+            renderCart();
+            document.getElementById('cart-modal').classList.remove('hidden');
+        }
+        
+        // Close cart modal
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+        }
+        
+        // Render cart
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            
+            cartItemsContainer.innerHTML = '';
+            
+            let cartTotal = 0;
+            
+            cart.forEach((item, index) => {
+                cartTotal += item.totalPrice * item.quantity;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                
+                // Item header with name and remove button
+                const itemHeader = document.createElement('div');
+                itemHeader.className = 'flex justify-between items-start';
+                
+                const itemName = document.createElement('h4');
+                itemName.className = 'font-medium';
+                itemName.style.color = 'var(--cor-texto) !important';
+                itemName.textContent = item.product.name;
+                
+                const removeButton = document.createElement('button');
+                removeButton.className = 'text-sm opacity-70';
+                removeButton.style.color = 'var(--cor-texto-secundario) !important';
+                removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                removeButton.onclick = () => removeCartItem(index);
+                
+                itemHeader.appendChild(itemName);
+                itemHeader.appendChild(removeButton);
+                cartItemElement.appendChild(itemHeader);
+                
+                // Quantity and price
+                const quantityPrice = document.createElement('div');
+                quantityPrice.className = 'flex justify-between items-center mt-1';
+                
+                const quantity = document.createElement('div');
+                quantity.className = 'text-sm';
+                quantity.style.color = 'var(--cor-texto-secundario) !important';
+                quantity.textContent = `${item.quantity}x`;
+                
+                const price = document.createElement('div');
+                price.className = 'font-medium';
+                price.style.color = 'var(--cor-primaria) !important';
+                price.textContent = formatCurrency(item.totalPrice);
+                
+                quantityPrice.appendChild(quantity);
+                quantityPrice.appendChild(price);
+                cartItemElement.appendChild(quantityPrice);
+                
+                // Variations
+                if (Object.keys(item.variations).length > 0) {
+                    const variationsContainer = document.createElement('div');
+                    variationsContainer.className = 'mt-1 text-xs';
+                    variationsContainer.style.color = 'var(--cor-texto-secundario) !important';
+                    
+                    for (const variationName in item.variations) {
+                        const variation = item.variations[variationName];
+                        const variationElement = document.createElement('div');
+                        
+                        if (variation.type === 'required') {
+                            variationElement.textContent = `${variationName}: ${variation.name}`;
+                        } else if (variation.type === 'optional') {
+                            const optionNames = Object.keys(variation.options).join(', ');
+                            variationElement.textContent = `${variationName}: ${optionNames}`;
+                        }
+                        
+                        variationsContainer.appendChild(variationElement);
+                    }
+                    
+                    cartItemElement.appendChild(variationsContainer);
+                }
+                
+                // Notes
+                if (item.notes) {
+                    const notesContainer = document.createElement('div');
+                    notesContainer.className = 'mt-1 text-xs italic';
+                    notesContainer.style.color = 'var(--cor-texto-secundario) !important';
+                    notesContainer.textContent = `Obs: ${item.notes}`;
+                    
+                    cartItemElement.appendChild(notesContainer);
+                }
+                
+                // Edit button
+                const editButton = document.createElement('button');
+                editButton.className = 'text-xs mt-2 underline';
+                editButton.style.color = 'var(--cor-primaria) !important';
+                editButton.textContent = 'Editar';
+                editButton.onclick = () => editCartItem(index);
+                
+                cartItemElement.appendChild(editButton);
+                
+                // Add divider
+                if (index < cart.length - 1) {
+                    const divider = document.createElement('div');
+                    divider.className = 'border-t my-3';
+                    divider.style.borderColor = 'var(--cor-borda) !important';
+                    cartItemElement.appendChild(divider);
+                }
+                
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            // Update total
+            cartTotalElement.textContent = formatCurrency(cartTotal);
+            
+            // Update checkout button
+            const checkoutButton = document.getElementById('checkout-button');
+            if (cart.length > 0) {
+                checkoutButton.disabled = false;
+                checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                checkoutButton.disabled = true;
+                checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        // Remove cart item
+        function removeCartItem(index) {
+            if (index >= 0 && index < cart.length) {
+                cart.splice(index, 1);
+                saveCart();
+                updateCartBadge();
+                
+                if (cart.length === 0) {
+                    closeCartModal();
+                    showToast('info', 'Carrinho vazio!');
+                } else {
+                    renderCart();
+                    showToast('info', 'Item removido do carrinho!');
+                }
+            }
+        }
+        
+        // Edit cart item
+        function editCartItem(index) {
+            if (index >= 0 && index < cart.length) {
+                const item = cart[index];
+                editingCartItemIndex = index;
+                
+                // Find the product in menuItems
+                const product = menuItems.find(p => p.id === item.product.id);
+                if (product) {
+                    closeCartModal();
+                    openProductModal(product, item);
+                } else {
+                    showToast('error', 'Produto não encontrado!');
+                }
+            }
+        }
+        
+        // Clear cart
+        function clearCart() {
+            cart = [];
+            saveCart();
+            updateCartBadge();
+            closeCartModal();
+            showToast('info', 'Carrinho limpo!');
+        }
+        
+        // Format currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+        
+        // Show toast notification
+        function showToast(type, message) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type} animate-toastSlideIn`;
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                </div>
+                <div class="toast-content">${message}</div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('animate-toastSlideIn');
+                toast.classList.add('animate-toastSlideOut');
+                
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Open checkout modal
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                showToast('warning', 'Seu carrinho está vazio!');
+                return;
+            }
+            
+            // Reset checkout form
+            document.getElementById('checkout-form').reset();
+            
+            // Set default delivery type
+            const defaultDeliveryType = appConfig.default_delivery_type || 'delivery';
+            document.querySelector(`input[name="delivery-type"][value="${defaultDeliveryType}"]`).checked = true;
+            updateDeliveryType();
+            
+            // Show first step
+            document.querySelectorAll('.checkout-step').forEach(step => step.classList.add('hidden'));
+            document.getElementById('checkout-step-1').classList.remove('hidden');
+            
+            // Update checkout summary
+            updateCheckoutSummary();
+            
+            // Show modal
+            closeCartModal();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+        
+        // Close checkout modal
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+        
+        // Update delivery type
+        function updateDeliveryType() {
+            const deliveryType = document.querySelector('input[name="delivery-type"]:checked').value;
+            const addressFields = document.getElementById('address-fields');
+            
+            // Show/hide address fields based on delivery type
+            if (deliveryType === 'delivery') {
+                addressFields.classList.remove('hidden');
+            } else {
+                addressFields.classList.add('hidden');
+            }
+            
+            // Update checkout summary
+            updateCheckoutSummary();
+        }
+        
+        // Update checkout summary
+        function updateCheckoutSummary() {
+            const summaryContainer = document.getElementById('checkout-summary');
+            const totalElement = document.getElementById('checkout-total');
+            
+            summaryContainer.innerHTML = '';
+            
+            let total = 0;
+            
+            // Add items to summary
+            cart.forEach(item => {
+                const itemTotal = item.totalPrice * item.quantity;
+                total += itemTotal;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'flex justify-between py-1';
+                
+                const itemName = document.createElement('div');
+                itemName.className = 'text-sm';
+                itemName.style.color = 'var(--cor-texto) !important';
+                itemName.textContent = `${item.quantity}x ${item.product.name}`;
+                
+                const itemPrice = document.createElement('div');
+                itemPrice.className = 'text-sm font-medium';
+                itemPrice.style.color = 'var(--cor-texto) !important';
+                itemPrice.textContent = formatCurrency(itemTotal);
+                
+                itemElement.appendChild(itemName);
+                itemElement.appendChild(itemPrice);
+                summaryContainer.appendChild(itemElement);
+            });
+            
+            // Add delivery fee if applicable
+            const deliveryType = document.querySelector('input[name="delivery-type"]:checked').value;
+            if (deliveryType === 'delivery' && appConfig.delivery_fee) {
+                const deliveryFee = parseFloat(appConfig.delivery_fee) || 0;
+                
+                if (deliveryFee > 0) {
+                    total += deliveryFee;
+                    
+                    const feeElement = document.createElement('div');
+                    feeElement.className = 'flex justify-between py-1 border-t mt-2';
+                    feeElement.style.borderColor = 'var(--cor-borda) !important';
+                    
+                    const feeName = document.createElement('div');
+                    feeName.className = 'text-sm';
+                    feeName.style.color = 'var(--cor-texto) !important';
+                    feeName.textContent = 'Taxa de entrega';
+                    
+                    const feePrice = document.createElement('div');
+                    feePrice.className = 'text-sm font-medium';
+                    feePrice.style.color = 'var(--cor-texto) !important';
+                    feePrice.textContent = formatCurrency(deliveryFee);
+                    
+                    feeElement.appendChild(feeName);
+                    feeElement.appendChild(feePrice);
+                    summaryContainer.appendChild(feeElement);
+                }
+            }
+            
+            // Update total
+            totalElement.textContent = formatCurrency(total);
+        }
+        
+        // Go to next checkout step
+        function nextCheckoutStep(currentStep) {
+            // Validate current step
+            if (currentStep === 1) {
+                const deliveryType = document.querySelector('input[name="delivery-type"]:checked').value;
+                
+                if (deliveryType === 'delivery') {
+                    const address = document.getElementById('address').value.trim();
+                    const neighborhood = document.getElementById('neighborhood').value.trim();
+                    
+                    if (!address) {
+                        showToast('error', 'Por favor, informe o endereço de entrega!');
+                        return;
+                    }
+                    
+                    if (!neighborhood) {
+                        showToast('error', 'Por favor, informe o bairro!');
+                        return;
+                    }
+                }
+            }
+            
+            // Hide current step
+            document.getElementById(`checkout-step-${currentStep}`).classList.add('hidden');
+            
+            // Show next step
+            document.getElementById(`checkout-step-${currentStep + 1}`).classList.remove('hidden');
+        }
+        
+        // Go to previous checkout step
+        function prevCheckoutStep(currentStep) {
+            // Hide current step
+            document.getElementById(`checkout-step-${currentStep}`).classList.add('hidden');
+            
+            // Show previous step
+            document.getElementById(`checkout-step-${currentStep - 1}`).classList.remove('hidden');
+        }
+        
+        // Submit order
+        function submitOrder() {
+            // Get form data
+            const name = document.getElementById('customer-name').value.trim();
+            const phone = document.getElementById('customer-phone').value.trim();
+            const deliveryType = document.querySelector('input[name="delivery-type"]:checked').value;
+            
+            // Validate form
+            if (!name) {
+                showToast('error', 'Por favor, informe seu nome!');
+                return;
+            }
+            
+            if (!phone) {
+                showToast('error', 'Por favor, informe seu WhatsApp!');
+                return;
+            }
+            
+            // Get address data if delivery
+            let address = '';
+            let neighborhood = '';
+            let reference = '';
+            
+            if (deliveryType === 'delivery') {
+                address = document.getElementById('address').value.trim();
+                neighborhood = document.getElementById('neighborhood').value.trim();
+                reference = document.getElementById('reference').value.trim();
+            }
+            
+            // Get payment method
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || '';
+            const change = document.getElementById('change-amount').value.trim();
+            
+            // Calculate total
+            let total = 0;
+            let itemsText = '';
+            
+            cart.forEach(item => {
+                const itemTotal = item.totalPrice * item.quantity;
+                total += itemTotal;
+                
+                // Add item to text
+                itemsText += `${item.quantity}x ${item.product.name} - ${formatCurrency(itemTotal)}\n`;
+                
+                // Add variations if any
+                if (Object.keys(item.variations).length > 0) {
+                    for (const variationName in item.variations) {
+                        const variation = item.variations[variationName];
+                        
+                        if (variation.type === 'required') {
+                            itemsText += `   ${variationName}: ${variation.name}\n`;
+                        } else if (variation.type === 'optional') {
+                            const optionNames = Object.keys(variation.options).join(', ');
+                            itemsText += `   ${variationName}: ${optionNames}\n`;
+                        }
+                    }
+                }
+                
+                // Add notes if any
+                if (item.notes) {
+                    itemsText += `   Obs: ${item.notes}\n`;
+                }
+                
+                itemsText += '\n';
+            });
+            
+            // Add delivery fee if applicable
+            if (deliveryType === 'delivery' && appConfig.delivery_fee) {
+                const deliveryFee = parseFloat(appConfig.delivery_fee) || 0;
+                
+                if (deliveryFee > 0) {
+                    total += deliveryFee;
+                    itemsText += `Taxa de entrega: ${formatCurrency(deliveryFee)}\n\n`;
+                }
+            }
+            
+            // Add total
+            itemsText += `Total: ${formatCurrency(total)}`;
+            
+            // Create order message
+            let message = `*Novo Pedido*\n\n`;
+            message += `*Cliente:* ${name}\n`;
+            message += `*Telefone:* ${phone}\n`;
+            message += `*Tipo de Entrega:* ${deliveryType === 'delivery' ? 'Entrega' : deliveryType === 'pickup' ? 'Retirada' : 'Local'}\n`;
+            
+            if (deliveryType === 'delivery') {
+                message += `*Endereço:* ${address}\n`;
+                message += `*Bairro:* ${neighborhood}\n`;
+                
+                if (reference) {
+                    message += `*Referência:* ${reference}\n`;
+                }
+            }
+            
+            if (paymentMethod) {
+                message += `*Forma de Pagamento:* ${paymentMethod}\n`;
+                
+                if (paymentMethod === 'money' && change) {
+                    message += `*Troco para:* ${change}\n`;
+                }
+            }
+            
+            message += `\n*Itens do Pedido:*\n${itemsText}`;
+            
+            // Encode message for WhatsApp
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Get WhatsApp number from config
+            const whatsappNumber = appConfig.whatsapp_number?.replace(/\D/g, '') || '';
+            
+            if (!whatsappNumber) {
+                showToast('error', 'Número de WhatsApp não configurado!');
+                return;
+            }
+            
+            // Create WhatsApp link
+            const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // Clear cart
+            cart = [];
+            saveCart();
+            updateCartBadge();
+            
+            // Close modal
+            closeCheckoutModal();
+            
+            // Show success message
+            showToast('success', 'Pedido enviado com sucesso!');
+            
+            // Open WhatsApp
+            window.open(whatsappLink, '_blank');
+        }

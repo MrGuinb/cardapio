@@ -1,0 +1,122 @@
+[03-Aug-2025 23:02:14 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:02:14 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:02:14 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/produtos.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:05:43 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:05:43 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:05:43 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/produtos.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:17:37 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:17:37 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:17:37 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/produtos.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 3
+[03-Aug-2025 23:17:38 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/categorias.php on line 3
+[03-Aug-2025 23:17:38 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/categorias.php on line 3
+[03-Aug-2025 23:17:38 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/categorias.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/categorias.php on line 3
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 3
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 3
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/pedidos.php:3
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 3
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/configuracoes.php on line 4
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Warning:  require(conexao.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/painel/configuracoes.php on line 4
+[03-Aug-2025 23:17:39 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'conexao.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/painel/configuracoes.php:4
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/configuracoes.php on line 4
+[03-Aug-2025 23:30:56 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:16
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(16): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 16
+[03-Aug-2025 23:31:00 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.categorias' doesn't exist in /home/gdbtech/public_html/cardapio/painel/categorias.php:10
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/categorias.php(10): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/categorias.php on line 10
+[03-Aug-2025 23:31:01 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.pedidos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/pedidos.php:23
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/pedidos.php(23): PDO->query('SELECT \n       ...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 23
+[03-Aug-2025 23:31:36 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:16
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(16): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 16
+[03-Aug-2025 23:39:45 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:16
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(16): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 16
+[04-Aug-2025 08:57:54 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:16
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(16): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 16
+[04-Aug-2025 08:57:56 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.categorias' doesn't exist in /home/gdbtech/public_html/cardapio/painel/categorias.php:10
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/categorias.php(10): PDO->query('SELECT * FROM c...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/categorias.php on line 10
+[04-Aug-2025 08:58:49 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:19
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(19): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 19
+[04-Aug-2025 08:59:11 America/Sao_Paulo] PHP Parse error:  syntax error, unexpected token "/", expecting end of file in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 45
+[04-Aug-2025 08:59:21 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:19
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(19): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 19
+[04-Aug-2025 08:59:29 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:19
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(19): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 19
+[04-Aug-2025 08:59:39 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:19
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(19): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 19
+[04-Aug-2025 08:59:50 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.produtos' doesn't exist in /home/gdbtech/public_html/cardapio/painel/produtos.php:19
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/produtos.php(19): PDO->query('SELECT * FROM p...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 19
+[04-Aug-2025 09:07:08 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.pedido_itens' doesn't exist in /home/gdbtech/public_html/cardapio/painel/pedidos.php:23
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/pedidos.php(23): PDO->query('SELECT \n       ...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 23
+[04-Aug-2025 09:07:26 America/Sao_Paulo] PHP Warning:  Undefined array key "nome" in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 33
+[04-Aug-2025 09:07:26 America/Sao_Paulo] PHP Warning:  Undefined array key "descricao" in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 33
+[04-Aug-2025 09:07:26 America/Sao_Paulo] PHP Warning:  Undefined array key "preco" in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 33
+[04-Aug-2025 09:07:26 America/Sao_Paulo] PHP Warning:  Undefined array key "imagem_url" in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 33
+[04-Aug-2025 09:07:26 America/Sao_Paulo] PHP Warning:  Undefined array key "id" in /home/gdbtech/public_html/cardapio/painel/produtos.php on line 33
+[04-Aug-2025 09:10:04 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.pedido_itens' doesn't exist in /home/gdbtech/public_html/cardapio/painel/pedidos.php:23
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/pedidos.php(23): PDO->query('SELECT \n       ...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 23
+[04-Aug-2025 09:10:12 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.pedido_itens' doesn't exist in /home/gdbtech/public_html/cardapio/painel/pedidos.php:23
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/pedidos.php(23): PDO->query('SELECT \n       ...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 23
+[04-Aug-2025 09:11:27 America/Sao_Paulo] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'gdbtech_cardapio.pedido_itens' doesn't exist in /home/gdbtech/public_html/cardapio/painel/pedidos.php:26
+Stack trace:
+#0 /home/gdbtech/public_html/cardapio/painel/pedidos.php(26): PDO->query('SELECT \n       ...')
+#1 {main}
+  thrown in /home/gdbtech/public_html/cardapio/painel/pedidos.php on line 26

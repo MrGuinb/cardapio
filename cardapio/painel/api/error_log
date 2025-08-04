@@ -1,0 +1,6 @@
+[04-Aug-2025 12:26:58 America/Sao_Paulo] PHP Warning:  require(session_check.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/api/produtos.php on line 5
+[04-Aug-2025 12:26:58 America/Sao_Paulo] PHP Warning:  require(session_check.php): Failed to open stream: No such file or directory in /home/gdbtech/public_html/cardapio/api/produtos.php on line 5
+[04-Aug-2025 12:26:58 America/Sao_Paulo] PHP Fatal error:  Uncaught Error: Failed opening required 'session_check.php' (include_path='.:/opt/cpanel/ea-php81/root/usr/share/pear') in /home/gdbtech/public_html/cardapio/api/produtos.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/gdbtech/public_html/cardapio/api/produtos.php on line 5

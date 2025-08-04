@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel Administrativo</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    header { margin-bottom: 20px; }
+    button { margin: 5px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Painel do Cardápio</h1>
+    <div>
+      <button onclick="carregarProdutos()">Produtos</button>
+      <button onclick="carregarNovoPedido()">Novo Pedido</button>
+      <button onclick="carregarCategorias()">Categorias</button>
+      <button onclick="carregarPedidos()">Pedidos</button>
+      <button onclick="carregarConfiguracoes()">Configurações</button>
+      <button onclick="window.location.href='logout.php'">Sair</button>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <p>Escolha uma opção acima para gerenciar.</p>
+  </main>
+
+  <script src="painel.js" defer></script>
+</body>
+</html>

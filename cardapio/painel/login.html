@@ -1,0 +1,24 @@
+
+<!-- painel/login.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login - Painel Administrativo</title>
+  <style>
+    body { font-family: sans-serif; display: flex; height: 100vh; align-items: center; justify-content: center; background: #f3f4f6; }
+    form { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 300px; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; }
+    button { background: #2563eb; color: white; border: none; cursor: pointer; }
+    button:hover { background: #1e40af; }
+  </style>
+</head>
+<body>
+  <form action="login.php" method="POST">
+    <h2>Painel Administrativo</h2>
+    <input type="text" name="usuario" placeholder="Usuário" required />
+    <input type="password" name="senha" placeholder="Senha" required />
+    <button type="submit">Entrar</button>
+  </form>
+</body>
+</html>
